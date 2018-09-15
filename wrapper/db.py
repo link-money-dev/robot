@@ -233,26 +233,39 @@ class PGManager():
         self.conn_args={'database':database, 'user':user, 'password':pw, 'host':host, 'port':port}
 
     def execute(self,sql):
-        self.conn = psycopg2.connect(**self.conn_args)
-        cursor=self.conn.cursor()
-        cursor.execute(sql)
-        self.conn.commit()
-        self.conn.close()
+        try:
+            self.conn = psycopg2.connect(**self.conn_args)
+            cursor=self.conn.cursor()
+            cursor.execute(sql)
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            self.conn.close()
 
     def select(self, sql):
-        self.conn = psycopg2.connect(**self.conn_args)
-        cursor = self.conn.cursor()
-        cursor.execute(sql)
-        rows = cursor.fetchall()
-        self.conn.close()
-        return rows
+        try:
+            self.conn = psycopg2.connect(**self.conn_args)
+            cursor = self.conn.cursor()
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+        except Exception as e:
+            print(e)
+            rows=[]
+        finally:
+            self.conn.close()
+            return rows
 
     def execute_many(self,query, sql_sequence):
-        self.conn = psycopg2.connect(**self.conn_args)
-        cursor=self.conn.cursor()
-        cursor.executemany(query, sql_sequence)
-        self.conn.commit()
-        self.conn.close()
+        try:
+            self.conn = psycopg2.connect(**self.conn_args)
+            cursor=self.conn.cursor()
+            cursor.executemany(query, sql_sequence)
+            self.conn.commit()
+        except Exception as e:
+            print(e.message)
+        finally:
+            self.conn.close()
 
     def close(self):
         self.conn.close()

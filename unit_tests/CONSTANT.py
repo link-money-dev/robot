@@ -1,7 +1,0 @@
-# -*- coding: UTF-8 -*-
-
-# 姑且算是一个夹具文件
-
-# 主发行帐号私钥
-SEED='SCV5M6ISCCVYBQ5Y4GQ3L2A6JM25Z4CAIZOBSWBRURFCBF4OKW3OAM3M'
-

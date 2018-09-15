@@ -5,17 +5,14 @@ import CONSTANT
 from wrapper.client import Client
 from tools import load_json
 
-constant=CONSTANT.Constant('test')
+constant=CONSTANT.Constant('public')
 
 # 定义一个发币端
 seed=constant.SEED
 client=Client(private_key=constant.SEED, api_server=constant.API_SERVER)
 # 定义一个收币端，of Client
 destination=Client(address=constant.DISTRIBUTOR_ADDRESS)
-# 发币
-keys=load_json.file2json('keys.json')[102:103]
 
-for keypair in keys:
-    client.pay_to(constant.DISTRIBUTOR_ADDRESS,1000000)
-    # client.pay_to(keypair['public_key'], 800, asset_code='LINK', asset_issuer=constant.ISSUER_ADDRESS)
+# client.fund(destination=constant.DISTRIBUTOR_ADDRESS, amount=1000000)
+client.pay_to(destination=constant.DISTRIBUTOR_ADDRESS, amount=1000000, asset_code='LINK', asset_issuer=constant.ISSUER_ADDRESS)
 

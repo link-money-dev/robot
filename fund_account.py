@@ -39,6 +39,7 @@ def fund_accounts_in_keys_dot_json(lower_bound=0, upper_bound=1):
     builder.sign()
     builder.submit()
 
+
 if __name__=='__main__':
     import time
     # while True:

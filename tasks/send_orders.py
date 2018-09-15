@@ -1,28 +1,65 @@
+# -*- coding: UTF-8 -*-
+import sys
+sys.path.append("..")
 import requests
 import json
 import random
 import CONSTANT
+from wrapper import db as DB
+import schedule
 
-url=CONSTANT.BASE_URL_TEST + '/link/api/call/run/orders'
+constant=CONSTANT.Constant('public')
+url=constant.BASE_URL + '/link/api/call/run/orders'
 user_tokens=['oliver','Thor','jeff','gary','jessy','omega','lindsey','mary','c001','c002','c003','Jacob','Michael','Ethan','Joshua','Alexander','Anthony','William','Christopher','Jayden','Andrew','Joseph','David','Noad','Aiden','James','Ryan','Logan','John','Nathan','Elijah','Christian','Gabriel','Benjamin','Jonathan','Tyler','Samuel','Nicholas','Gavin','Dylan']
-user_tokens=['oOZg40kK2BLQAXxGY29kpxXetc0c']
-fees=[1,1,1,1,3,3,5]
+# user_tokens=['oOZg40kK2BLQAXxGY29kpxXetc0c','oliver','Thor','jeff','gary']
+# user_tokens=['bitch','slut','whore','motherfucker']
+# user_tokens=['1001','1002','1003','1004','1005','1006','1007']
 
-def send_orders(span, interval=0.1):
+prefix='Oxxx'
+for i in range(10):
+    user_token=prefix
+    for j in range(10):
+        user_token+=random.choice('1 2 3 4 5 6 7 8 9 0 p o i u y t r e w q a s d f g h j k l m n b v c x z'.split(' '))
+    user_tokens.append(user_token)
+fees=[1,1,1,1,3,3,5]
+order_no=3900
+def send_orders(span=300, interval=0.5):
+    global user_tokens
     import time
 
-    order_no = 0
+    global order_no
 
     t0=time.time()
     end_time=t0+span
 
+    # while t0<end_time:
+    #     t0=time.time()
+    #     data = {'UserToken': random.choice(user_tokens), 'OrderAmount': random.choice(fees), 'OrderNo':str(order_no).rjust(8,'0')}
+    #     order_no+=1
+    #     r=requests.post(url,data=data).text
+    #     print(r)
+    #     time.sleep(interval)
     while t0<end_time:
-        t0=time.time()
-        data = {'UserToken': random.choice(user_tokens), 'OrderAmount': random.choice(fees)}
-        order_no+=1
-        r=requests.post(url,data=data)
-        print(r.text)
-        time.sleep(interval)
+        for token in user_tokens:
+            t0 = time.time()
+            data = {'UserToken': token, 'OrderAmount': random.choice(fees),
+                    'OrderNo': str(order_no).rjust(8, '0')}
+            order_no += 1
+            r = requests.post(url, data=data).text
+            print(r)
+            time.sleep(interval)
+        time.sleep(300)
+
 
 if __name__=='__main__':
-    send_orders(2)
+    global user_tokens
+    user_tokens=[]
+    constant=CONSTANT.Constant('public')
+    old_constant=CONSTANT.Constant('test')
+    old_pgmanager=DB.PGManager(**old_constant.DB_CONNECT_ARGS)
+    my_pgmanager = DB.PGManager(**constant.DB_CONNECT_ARGS)
+    rows = old_pgmanager.select('select distinct usertoken from orders where usertoken like \'%oOZg40%\'')
+    for row in rows:
+        user_tokens.append(row[0])
+    user_tokens=['oOZg40qZIe-Ni3iWakTlnws0Otjk']
+    send_orders(36000, 10)

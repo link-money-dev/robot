@@ -9,13 +9,11 @@
 import wrapper.client as client
 import CONSTANT
 
-constant=CONSTANT.Constant('local')
+constant=CONSTANT.Constant('public')
 issuer_private_key=constant.SEED
 distributor_private_key=constant.DISTRIBUTOR_SEED
 issuer=client.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
 distributor=client.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
 
-result=issuer.issue_asset(distributor.private_key,asset_code='LINK',amount=10000000)
+result=issuer.issue_asset(distributor.private_key,asset_code='LINK',amount=1000000000)
 print(result)
-
-
