@@ -10,7 +10,8 @@ class Timer():
         self.func()
         while True:
             if int(time.time())<t+self.interval:
-                pass
+                time.sleep(0.5)
+                # pass
             else:
                 t=int(time.time())
                 self.func()
