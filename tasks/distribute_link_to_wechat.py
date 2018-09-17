@@ -326,7 +326,7 @@ if __name__=='__main__':
     issuer = client.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
     distributor = client.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
 
-    result = issuer.issue_asset(distributor.private_key, asset_code='TST1', amount=1000000000)
+    result = issuer.issue_asset(distributor.private_key, asset_code='LINK', amount=1000000000)
     print(result)
 
 
