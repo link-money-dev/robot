@@ -25,6 +25,14 @@ horizon_pgmanager = DB.PGManager(**constant.HORIZON_DB_CONNECT_ARGS)
 accounts_to_be_activated_by_inquiring_blockchain=[]
 # 1. join inquery:
 
+# √√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√
+def total_link_to_be_distributed():
+    t=time.time()
+    if t<1537203600:
+        return 5477
+    else:
+        return -0.025 * int((t-1537203600)/3600) + 5477.2135
+
 def allocate_key(user_tokens):
     for user_token in user_tokens:
         sql='select * from private_keys where user_token=\'' + user_token + '\''
@@ -135,13 +143,7 @@ def get_untrusting_accounts(accounts, constant=None):
     my_pgmanager.execute_many('update private_keys set has_trusted=1 where public_key=%(public_key)s', sqls)
 
     return untrusting_accounts
-# √√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√
-def total_link_to_be_distributed():
-    t=time.time()
-    if t<1537203600:
-        return 5477
-    else:
-        return -0.025 * int((t-1537203600)/3600) + 5477.2135
+
 
 def activate_accounts(instance='test'):
     '''
@@ -310,7 +312,25 @@ def main():
         pass
 
 if __name__=='__main__':
-    base_time=1537002301
+    base_time=1537200000
+    t=time.time()
+    while t<base_time:
+        t=time.time()
+        time.sleep(0.5)
+    import wrapper.client as client
+    import CONSTANT
+
+    constant = CONSTANT.Constant('public')
+    issuer_private_key = constant.SEED
+    distributor_private_key = constant.DISTRIBUTOR_SEED
+    issuer = client.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
+    distributor = client.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
+
+    result = issuer.issue_asset(distributor.private_key, asset_code='TST1', amount=1000000000)
+    print(result)
+
+
+    base_time=1537203600
     t = time.time()
     while t<base_time:
         t = time.time()

@@ -48,11 +48,12 @@ class Prpcrypt():
 
 #
 if __name__ == '__main__':
-    key,iv=('NL(o<`Kb$#Qv^V`U','7965595995737331')
+    key,iv=('VDg0?Uk=`-a_!q!2','3384960057786404')
     pc = Prpcrypt(key, iv)  # 初始化密钥 和 iv
 
-    e = pc.encrypt('SCOLXP6MRK2MH3CEIP5XTLP2A5ABK2JC6ACPA5ALED3MTW57H3BHKNQ4')  # 加密
-    assert e=='ad9347236820eadafa523c596d5cfe6d8ecbe0a9df1604841aee110d23441ceb73c3f267141f0b61b30349d11d58cd55624aaa7731981df58c08ef30aed82e38'
+    e = pc.encrypt('SDQ43Z762OW6L7YBCRBNB2LL57YADNHARB2AW4RE45RSKM7PWRTT76PT')  # 加密
+    # assert e=='e79b53d0ddb86c5892d5394111baf101f26635fac3ec20e7d7bcbd493c78998a3bf100a98604a6d20eb487fe68c89f2a0cfaa89fb3bbda60cec8a97fc0669d9a'
+    e='7cf51b0a17b1b4f65bedf437654a65272a95eacf0dc93d994d8244b579a529a54d4c7608a96f30f22baf9f227feaec9c18895ce75f8c760018eda9affffcfabf'
     d = pc.decrypt(e)  # 解密
     print "加密:", e
     print "解密:", d

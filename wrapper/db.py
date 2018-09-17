@@ -13,6 +13,7 @@ DB_NAME=''
 import os
 import sqlite3
 import psycopg2
+
 #
 # class Column():
 #     """Represent a Column in a :class:`Table`.
@@ -225,8 +226,12 @@ class SQLManager():
             print(e)
 
     def execute_many(self,sql,args):
-        self.conn.executemany(sql,args)
-        self.conn.commit()
+        try:
+            self.conn.executemany(sql,args)
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+
 
 class PGManager():
     def __init__(self, database='', user='', pw='', host='', port=''):
@@ -269,3 +274,7 @@ class PGManager():
 
     def close(self):
         self.conn.close()
+
+if __name__=='__main__':
+    sqlmanager=SQLManager('keys.db')
+    sqlmanager.execute('insert into keys values (\'123\',\'456\',\'none\')')

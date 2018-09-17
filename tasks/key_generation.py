@@ -7,11 +7,11 @@
 
 # 请填写下面几个参数：
 # 第一个参数为生成的密钥对的数量
-NUMBER=10000
+NUMBER=1000
 # 第二个参数为AES加密类实例的key，必须为16位ascii字符，必须由 第一人 妥善保存
-KEY='a'*16
+KEY=''
 # 第三个参数为AES加密类实例的iv，必须为16为数字，必须由 第二人 妥善保存
-IV='1'*16
+IV=''
 # 并发度，默认为单线程，单线程快38%
 CONCURRENCY=1
 
@@ -77,9 +77,11 @@ def generate_keypairs(number, key='', iv='', encrypted=False):
     return keypairs
 
 def main():
-    import sqlite3
+    from  wrapper import db as DB
     t=time.time()
-    keypairs = generate_keypairs( NUMBER,KEY,IV)
+    db = DB.SQLManager('keys.db')
+    keypairs = generate_keypairs(NUMBER, KEY, IV, True)
+    db.execute_many('insert into keys(private_key,public_key) values(?,?)',keypairs)
 
     print('time used: %d seconds' % int(time.time()-t))
 
