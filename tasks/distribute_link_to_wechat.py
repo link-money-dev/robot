@@ -89,7 +89,7 @@ def calculate_link_to_be_distributed_to_single_person(users, total_expenses, log
         total_link = total_link_to_be_distributed()
         for k in users_:
             user = users_[k]
-            link_to_be_distributed = user.expense / total_expenses * total_link
+            link_to_be_distributed = float(user.expense) / float(total_expenses) * total_link
             user.link = round(link_to_be_distributed, 6)
     else:
         pass
@@ -218,7 +218,7 @@ def main():
 
     # 2. activate accounts
     builder = BUILDER.Builder(secret=constant.SEED, network=constant.API_SERVER)
-    sql='select private_key, public_key from private_keys' # where is_activated!=1'
+    sql='select private_key, public_key from private_keys where is_activated=0'
     all_accounts=[]
     rows=my_pgmanager.select(sql)
     for row in rows:
@@ -232,14 +232,28 @@ def main():
     if len(accounts_to_be_activated)!=0:
         try:
             sqls=[]
-            for account in accounts_to_be_activated:
-                builder.append_create_account_op(destination=account, starting_balance=constant.FOTONO_STARTING_BALANCE)
-                sqls.append({'public_key': account})
-            builder.sign()
-            res=builder.submit()
-            if dict(res).__contains__('hash'):
-                my_pgmanager.execute_many('update private_keys set is_activated=1 where public_key=%(public_key)s',
-                                          sqls)
+            iterations=int(len(accounts_to_be_activated)/100)
+            for i in range(0,iterations+1):
+                builder= BUILDER.Builder(secret=constant.SEED, network=constant.API_SERVER)
+                accounts=accounts_to_be_activated[i*100:i*100+100]
+                for account in accounts:
+                    builder.append_create_account_op(destination=account, starting_balance=constant.FOTONO_STARTING_BALANCE)
+                    sqls.append({'public_key': account})
+                builder.sign()
+                res=builder.submit()
+                if dict(res).__contains__('hash'):
+                    my_pgmanager.execute_many('update private_keys set is_activated=1 where public_key=%(public_key)s',
+                                              sqls)
+                time.sleep(10)
+            # the following codes are correct:
+            # for account in accounts_to_be_activated:
+            #     builder.append_create_account_op(destination=account, starting_balance=constant.FOTONO_STARTING_BALANCE)
+            #     sqls.append({'public_key': account})
+            # builder.sign()
+            # res=builder.submit()
+            # if dict(res).__contains__('hash'):
+            #     my_pgmanager.execute_many('update private_keys set is_activated=1 where public_key=%(public_key)s',
+            #                               sqls)
         except Exception as e:
             print('Accounts creation failed\n' + e.message)
     else:
@@ -305,6 +319,7 @@ def main():
                 # data=json.dumps({'LinkResult1':items})
                 data='LinkResult='+json.dumps(items)
                 res0=requests.get(url+'?'+data)
+                print(res0.text)
                 a=1
             except Exception as e:
                 print(e)
@@ -312,25 +327,7 @@ def main():
         pass
 
 if __name__=='__main__':
-    base_time=1537200000
-    t=time.time()
-    while t<base_time:
-        t=time.time()
-        time.sleep(0.5)
-    import wrapper.client as client
-    import CONSTANT
-
-    constant = CONSTANT.Constant('public')
-    issuer_private_key = constant.SEED
-    distributor_private_key = constant.DISTRIBUTOR_SEED
-    issuer = client.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
-    distributor = client.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
-
-    result = issuer.issue_asset(distributor.private_key, asset_code='LINK', amount=1000000000)
-    print(result)
-
-
-    base_time=1537203600
+    base_time=1537210800
     t = time.time()
     while t<base_time:
         t = time.time()
@@ -338,8 +335,6 @@ if __name__=='__main__':
 
     print('robot launched!!!\n\n')
     cnt=0
-    timer=TIMER.Timer(300,main)
+    timer=TIMER.Timer(3600,main)
     timer.run()
 
-
-    # activate_accounts()
