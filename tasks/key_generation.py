@@ -55,12 +55,10 @@ def generate_keypairs(number, key='', iv='', encrypted=False):
         print("Single-threading mode, the statistics is accurate...")
         for i in range(number):
             some_method()
-            progress=i*1.0/number*100
-            if progress == int(progress):
-                print("%d%% is done..." % progress)
+
     else:
         import threading
-        print("Multi-threading mode, the statistics may be inaccurate...")
+
         # 每次并发执行生成{{CONCURRENCY}}个私钥，并写入sqlite
         for i in range(number/CONCURRENCY):
             threads=[]

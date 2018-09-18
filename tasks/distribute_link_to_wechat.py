@@ -70,11 +70,11 @@ def get_users_and_total_expenses(t, interval=3600):
                 sql = 'insert into private_keys(user_token,private_key,public_key, is_activated) values(\'%s\',\'%s\',\'%s\',0)' % (
                     token, keypair[0], keypair[1])
                 my_pgmanager.execute(sql)
-                user = USER.User(token, expense, keypair[0], keypair[1], 0)
+                user = USER.User(token, expense, keypair[1], keypair[0], 0)
             else:
-                keypair = (rs[0][3], rs[0][2])
+                keypair = (rs[0][2], rs[0][3])
                 is_activated = rs[0][6]
-                user = USER.User(token, expense, keypair[0], keypair[1], 1)
+                user = USER.User(token, expense, keypair[1], keypair[0], 1)
             users[token] = user
         else:
             users[token].add_expense(expense)
@@ -327,7 +327,7 @@ def main():
         pass
 
 if __name__=='__main__':
-    base_time=1537210800
+    base_time=1537232400
     t = time.time()
     while t<base_time:
         t = time.time()
