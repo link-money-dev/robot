@@ -14,15 +14,15 @@ user_tokens=['oliver','Thor','jeff','gary','jessy','omega','lindsey','mary','c00
 # user_tokens=['oOZg40kK2BLQAXxGY29kpxXetc0c','oliver','Thor','jeff','gary']
 # user_tokens=['bitch','slut','whore','motherfucker']
 # user_tokens=['1001','1002','1003','1004','1005','1006','1007']
-
+user_tokens=[]
 prefix='Oxxx'
 for i in range(10):
     user_token=prefix
     for j in range(10):
         user_token+=random.choice('1 2 3 4 5 6 7 8 9 0 p o i u y t r e w q a s d f g h j k l m n b v c x z'.split(' '))
     user_tokens.append(user_token)
-fees=[1,1,1,1,3,3,5]
-order_no=4601
+fees=[0.3,0.3,0.3,0.9,0.9,1.5,1.5]
+order_no=15200
 def send_orders(span=300, interval=0.5):
     global user_tokens
     import time
@@ -43,23 +43,33 @@ def send_orders(span=300, interval=0.5):
         for token in user_tokens:
             t0 = time.time()
             data = {'UserToken': token, 'OrderAmount': random.choice(fees),
-                    'OrderNo': str(order_no).rjust(8, '0')}
+                    'OrderNo': str(random.randint(1,1000000000)).rjust(16, '0')}
             order_no += 1
             r = requests.post(url, data=data).text
             print(r)
             time.sleep(interval)
         time.sleep(300)
 
+def send_orders():
+    user_tokens = [
+        'oOZg40gWP6JkUNCLDHc7SZr_cYFM',
+        'oOZg40qZIe-Ni3iWakTlnws0Otjk',
+    ]
+    for user_token in user_tokens:
+        data = {'UserToken': user_token, 'OrderAmount': random.choice(fees) ,
+                'OrderNo': str(random.randint(1,1000000000)).rjust(16, '0')}
+        r = requests.post(url, data=data).text
+        print(r)
 
 if __name__=='__main__':
     global user_tokens
-    user_tokens=[]
-    constant=CONSTANT.Constant('public')
-    old_constant=CONSTANT.Constant('test')
-    old_pgmanager=DB.PGManager(**old_constant.DB_CONNECT_ARGS)
-    my_pgmanager = DB.PGManager(**constant.DB_CONNECT_ARGS)
-    rows = old_pgmanager.select('select distinct usertoken from orders where usertoken like \'%oOZg40%\'')
-    for row in rows:
-        user_tokens.append(row[0])
-    user_tokens=['oOZg40qZIe-Ni3iWakTlnws0Otjk']
-    send_orders(36000, 10)
+    from tools import timer as TIMER
+    # constant=CONSTANT.Constant('public')
+    # old_constant=CONSTANT.Constant('test')
+    # old_pgmanager=DB.PGManager(**old_constant.DB_CONNECT_ARGS)
+    # my_pgmanager = DB.PGManager(**constant.DB_CONNECT_ARGS)
+    # rows = my_pgmanager.select('select distinct usertoken from orders where usertoken like \'%oOZg40%\'')
+    # for row in rows:
+    #     user_tokens.append(row[0])
+    timer=TIMER.Timer(3600,send_orders)
+    timer.run()

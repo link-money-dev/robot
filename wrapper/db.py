@@ -250,6 +250,7 @@ class PGManager():
 
     def select(self, sql):
         try:
+            rows=[]
             self.conn = psycopg2.connect(**self.conn_args)
             cursor = self.conn.cursor()
             cursor.execute(sql)

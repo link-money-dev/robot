@@ -205,7 +205,6 @@ def main():
     timeArray = time.localtime(t)
     otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
     print('Epoch:   %s\tTime:   %s' % (str(cnt),otherStyleTime))
-    print('\n')
     users = {}
     expenses = {}
     total_expenses = 0
@@ -317,9 +316,8 @@ def main():
                 url='http://weixin.jrlyl.com/sunday/link/callback'
                 # items=json.dumps(items)
                 # data=json.dumps({'LinkResult1':items})
-                data='LinkResult='+json.dumps(items)
-                res0=requests.get(url+'?'+data)
-                print(res0.text)
+                data={'LinkResult':json.dumps(items)}
+                res0=requests.post(url,data)
                 a=1
             except Exception as e:
                 print(e)
@@ -327,7 +325,7 @@ def main():
         pass
 
 if __name__=='__main__':
-    base_time=1537232400
+    base_time=1537272000
     t = time.time()
     while t<base_time:
         t = time.time()

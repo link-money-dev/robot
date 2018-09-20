@@ -33,7 +33,7 @@ def generate_keypairs(number, key='', iv='', encrypted=False):
     keypairs=[]
     if key=='' or iv=='':
         key,iv=generate_random_key_pair()
-        print('key=%s\niv=%s' % (key.decode(),iv.decode()))
+        print('key=%s\niv=%s' % (key,iv))
         f=open('passphrase'+str(time.time()),'w')
         f.write(str(key)+'\n'+str(iv))
         f.flush()
@@ -52,7 +52,7 @@ def generate_keypairs(number, key='', iv='', encrypted=False):
         keypairs.append((seed, address))
 
     if CONCURRENCY == 1:
-        print("Single-threading mode, the statistics is accurate...")
+        # print("Single-threading mode, the statistics is accurate...")
         for i in range(number):
             some_method()
 
@@ -77,9 +77,9 @@ def generate_keypairs(number, key='', iv='', encrypted=False):
 def main():
     from  wrapper import db as DB
     t=time.time()
-    db = DB.SQLManager('keys.db')
-    keypairs = generate_keypairs(NUMBER, KEY, IV, True)
-    db.execute_many('insert into keys(private_key,public_key) values(?,?)',keypairs)
+    # db = DB.SQLManager('keys.db')
+    keypairs = generate_keypairs(NUMBER, KEY, IV, False)
+    # db.execute_many('insert into keys(private_key,public_key) values(?,?)',keypairs)
 
     print('time used: %d seconds' % int(time.time()-t))
 

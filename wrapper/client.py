@@ -5,13 +5,13 @@ from builder import Builder
 class Client:
 
     def __init__(self, private_key=None, address=None, api_server=''):
-        if private_key==None and address==None:
+        if private_key is None and address is None:
             raise Exception("private key and address can't both be none")
-        elif private_key==None:
+        elif private_key is None:
             self.api_server = api_server
             kp = Keypair.from_address(address)
             self.address = address
-        elif address==None:
+        elif address is None:
             self.private_key=private_key
             self.api_server=api_server
             self.address=Keypair.from_seed(private_key).address().decode()
