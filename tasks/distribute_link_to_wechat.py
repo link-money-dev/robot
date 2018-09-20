@@ -325,11 +325,11 @@ def main():
         pass
 
 if __name__=='__main__':
-    base_time=1537272000
+    base_time=1537455600
     t = time.time()
     while t<base_time:
         t = time.time()
-        time.sleep(10)
+        time.sleep(5)
 
     print('robot launched!!!\n\n')
     cnt=0
