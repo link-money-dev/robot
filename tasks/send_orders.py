@@ -21,7 +21,7 @@ for i in range(10):
     for j in range(10):
         user_token+=random.choice('1 2 3 4 5 6 7 8 9 0 p o i u y t r e w q a s d f g h j k l m n b v c x z'.split(' '))
     user_tokens.append(user_token)
-fees=[0.3,0.3,0.3,0.9,0.9,1.5,1.5]
+fees=[100]
 order_no=15200
 def send_orders(span=300, interval=0.5):
     global user_tokens
@@ -52,12 +52,18 @@ def send_orders(span=300, interval=0.5):
 
 def send_orders():
     user_tokens = [
+        'oOZg40ob75KjAGmdV-rfUVXWsFiE',
         'oOZg40gWP6JkUNCLDHc7SZr_cYFM',
-        'oOZg40qZIe-Ni3iWakTlnws0Otjk',
+        'oOZg40qZIe-Ni3iWakTlnws0Otjk'
     ]
+    import random
+    import time
+
+
     for user_token in user_tokens:
         data = {'UserToken': user_token, 'OrderAmount': random.choice(fees) ,
                 'OrderNo': str(random.randint(1,1000000000)).rjust(16, '0')}
+        time.sleep(random.randint(0, 30))
         r = requests.post(url, data=data).text
         print(r)
 

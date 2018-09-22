@@ -49,7 +49,7 @@ def get_users_and_total_expenses(t, interval=3600):
     # ts = int(time.mktime(time.strptime(dt, "%Y-%m-%d %H:%M:%S")))
     datetime_upperbound = t
     datetime_lowerbound = datetime_upperbound-interval
-    sql='select * from orders where created_at<' + str(datetime_upperbound) + ' and created_at>' + str(datetime_lowerbound) + ' and is_filled=0'
+    sql='select * from orders where created_at<' + str(datetime_upperbound) + ' and is_filled=0'
     rows=my_pgmanager.select(sql)
     # get all distinct user_tokens:
     user_tokens=[]
@@ -94,12 +94,6 @@ def calculate_link_to_be_distributed_to_single_person(users, total_expenses, log
     else:
         pass
     return users_
-
-def append_inactivated_public_key_by_inquiring_blockchain(address):
-    global accounts_to_be_activated_by_inquiring_blockchain
-    res = requests.get('http://116.62.226.231:8888/accounts/' + address).text
-    if res.find('"asset_type": "native"') == -1:
-        accounts_to_be_activated_by_inquiring_blockchain.append(address)
 
 def get_inactive_accounts(accounts, instance='test'):
     constant=CONSTANT.Constant(instance)
@@ -210,10 +204,12 @@ def main():
     total_expenses = 0
 
     # 0. get all distinct users group by token, and total expenses
-    users,total_expenses=get_users_and_total_expenses(t, 1000000)
+    users,total_expenses=get_users_and_total_expenses(t, 3600*3)
+    print('0. users and total expenses calculated successfully')
 
     # 1. calculate the link to be distributed to the single person
     users=calculate_link_to_be_distributed_to_single_person(users,total_expenses)
+    print('1. link distribution calculation successfully')
 
     # 2. activate accounts
     builder = BUILDER.Builder(secret=constant.SEED, network=constant.API_SERVER)
@@ -244,6 +240,7 @@ def main():
                     my_pgmanager.execute_many('update private_keys set is_activated=1 where public_key=%(public_key)s',
                                               sqls)
                 time.sleep(10)
+                print('accounts calculation successfully')
             # the following codes are correct:
             # for account in accounts_to_be_activated:
             #     builder.append_create_account_op(destination=account, starting_balance=constant.FOTONO_STARTING_BALANCE)
@@ -282,6 +279,7 @@ def main():
             thread.start()
         for thread in threads:
             thread.join()
+        print('trusting successfully')
         # my_pgmanager.execute_many('update private_keys set has_trusted=1 where public_key=%(public_key)s', sqls)
     else:
         pass
@@ -308,7 +306,8 @@ def main():
                     "LinkAmount": users[k].link
                 }
                 items.append(item)
-            my_pgmanager.execute_many('update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s', sqls)
+            sql='update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s and created_at<' + str(t) + ' and is_filled=0'
+            my_pgmanager.execute_many(sql, sqls)
 
             try:
                 # respond to server end
@@ -318,14 +317,20 @@ def main():
                 # data=json.dumps({'LinkResult1':items})
                 data={'LinkResult':json.dumps(items)}
                 res0=requests.post(url,data)
-                a=1
+                print('link distribution successfully')
             except Exception as e:
                 print(e)
     else:
         pass
+    print('\n')
+    print('\n')
+    print('\n')
 
 if __name__=='__main__':
-    base_time=1537455600
+    from datetime import datetime
+    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    unix_time=int(time.mktime(dt.timetuple()))
+    base_time=unix_time+3600
     t = time.time()
     while t<base_time:
         t = time.time()
