@@ -196,7 +196,7 @@ def main():
     global cnt
     cnt+=1
     t = int(time.time())
-    t=1542934800
+    # t=1542934800
     timeArray = time.localtime(t)
     otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
     print('Epoch:   %s\tTime:   %s' % (str(cnt),otherStyleTime))
@@ -345,14 +345,14 @@ def main():
     print('\n')
 
 if __name__=='__main__':
-    # from datetime import datetime
-    # dt=datetime.now().replace(minute=0, second=0, microsecond=0)
-    # unix_time=int(time.mktime(dt.timetuple()))
-    # base_time=unix_time+3600
-    # t = time.time()
-    # while t<base_time:
-    #     t = time.time()
-    #     time.sleep(5)
+    from datetime import datetime
+    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    unix_time=int(time.mktime(dt.timetuple()))
+    base_time=unix_time+3600
+    t = time.time()
+    while t<base_time:
+        t = time.time()
+        time.sleep(5)
 
     print('robot launched!!!\n\n')
     cnt=0
