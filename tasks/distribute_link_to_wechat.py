@@ -26,7 +26,7 @@ accounts_to_be_activated_by_inquiring_blockchain=[]
 # 1. join inquery:
 
 # √√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√√
-def total_link_to_be_distributed():
+def total_link_to_be_distributed(reserve=0):
     t=time.time()
     if t<1537203600:
         return 5477
@@ -196,6 +196,7 @@ def main():
     global cnt
     cnt+=1
     t = int(time.time())
+    t=1542934800
     timeArray = time.localtime(t)
     otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
     print('Epoch:   %s\tTime:   %s' % (str(cnt),otherStyleTime))
@@ -287,39 +288,56 @@ def main():
     # distribute link
     builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
     if len(users)!=0:
-        for k in users:
-            user = users[k]
-            builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK', asset_issuer=constant.ISSUER_ADDRESS)
-        # add a memo, which specifies the timestamp when the latest order is submitted
-        builder.add_text_memo(str(time.time()))
-        builder.sign()
-        res=builder.submit()
-        # time.sleep(20)
-        if res.__contains__('hash'):
-            sqls=[]
-            items=[]
-            for k in users:
-                sqls.append({'is_filled': 1, 'user_token': users[k].token})
-                item = {
-                    "UserToken": users[k].token,
-                    "LinkAddress": users[k].address,
-                    "LinkAmount": users[k].link
-                }
-                items.append(item)
-            sql='update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s and created_at<' + str(t) + ' and is_filled=0'
-            my_pgmanager.execute_many(sql, sqls)
+        iterations = int(len(users) / 100)
+        # for i in range(0,iterations):
+        #     for ii in range(0,100):
+        #         pass
+        list_users=list(users)
+        for i in range(0,iterations+1):
 
-            try:
-                # respond to server end
-                # url='http://19o60w6992.51mypc.cn/sunday/link/callback'
-                url='http://weixin.jrlyl.com/sunday/link/callback'
-                # items=json.dumps(items)
-                # data=json.dumps({'LinkResult1':items})
-                data={'LinkResult':json.dumps(items)}
-                res0=requests.post(url,data)
-                print('link distribution successfully')
-            except Exception as e:
-                print(e)
+            list_users_to_be_sent = list_users[i * 100:i * 100 + 100]
+            builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
+            for k in list_users_to_be_sent:
+                user=users[k]
+                builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK',
+                                          asset_issuer=constant.ISSUER_ADDRESS)
+            builder.add_text_memo(str(time.time()))
+            builder.sign()
+
+        # for k in users:
+        #     user = users[k]
+        #     builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK', asset_issuer=constant.ISSUER_ADDRESS)
+        # # add a memo, which specifies the timestamp when the latest order is submitted
+        # builder.add_text_memo(str(time.time()))
+        # builder.sign()
+            res=builder.submit()
+            # time.sleep(20)
+            if res.__contains__('hash'):
+                sqls=[]
+                items=[]
+                for k in list_users_to_be_sent:
+                    user = users[k]
+                    sqls.append({'is_filled': 1, 'user_token': user.token})
+                    item = {
+                        "UserToken": user.token,
+                        "LinkAddress": user.address,
+                        "LinkAmount": user.link
+                    }
+                    items.append(item)
+                sql='update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s and created_at<' + str(t) + ' and is_filled=0'
+                my_pgmanager.execute_many(sql, sqls)
+
+                try:
+                    # respond to server end
+                    # url='http://19o60w6992.51mypc.cn/sunday/link/callback'
+                    url='http://weixin.jrlyl.com/sunday/link/callback'
+                    # items=json.dumps(items)
+                    # data=json.dumps({'LinkResult1':items})
+                    data={'LinkResult':json.dumps(items)}
+                    res0=requests.post(url,data)
+                    print('link distribution successfully')
+                except Exception as e:
+                    print(e)
     else:
         pass
     print('\n')
@@ -327,14 +345,14 @@ def main():
     print('\n')
 
 if __name__=='__main__':
-    from datetime import datetime
-    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
-    unix_time=int(time.mktime(dt.timetuple()))
-    base_time=unix_time+3600
-    t = time.time()
-    while t<base_time:
-        t = time.time()
-        time.sleep(5)
+    # from datetime import datetime
+    # dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    # unix_time=int(time.mktime(dt.timetuple()))
+    # base_time=unix_time+3600
+    # t = time.time()
+    # while t<base_time:
+    #     t = time.time()
+    #     time.sleep(5)
 
     print('robot launched!!!\n\n')
     cnt=0

@@ -6,14 +6,14 @@
 
 # 发行账户即：
 # 分发账户即：
-import wrapper.client as client
+import wrapper.client as CLIENT
 import CONSTANT
 
 constant=CONSTANT.Constant('public')
-issuer_private_key=constant.SEED
-distributor_private_key=constant.DISTRIBUTOR_SEED
-issuer=client.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
-distributor=client.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
+issuer_private_key='SBWATTQW5UDSVNZ7BVKX3DPR4EJFZCRUBYKRG5SMDESRSD5QWG7VSDQH'
+distributor_private_key='SCZVR6ZS3UKV3YHTK5YJJ3E7WD6RLWKJDPRTUNYQQ54BDFAYEQ4JDZ6S'
+issuer=CLIENT.Client(private_key=issuer_private_key, api_server=constant.API_SERVER)
+distributor=CLIENT.Client(private_key=distributor_private_key, api_server=constant.API_SERVER)
 
-result=issuer.issue_asset(distributor.private_key,asset_code='LINK',amount=1000000000)
+result=issuer.issue_asset(distributor.private_key,asset_code='FX',amount=21000000)
 print(result)

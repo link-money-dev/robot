@@ -39,6 +39,7 @@ class Client:
             builder.append_payment_op(destination=destination, amount=amount)
         builder.sign()
         result = builder.submit()
+        return result
 
     def get_info(self, address=''):
         if address=='':

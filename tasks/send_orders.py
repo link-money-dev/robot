@@ -8,7 +8,7 @@ import CONSTANT
 from wrapper import db as DB
 import schedule
 
-constant=CONSTANT.Constant('public')
+constant=CONSTANT.Constant('local')
 url=constant.BASE_URL + '/link/api/call/run/orders'
 user_tokens=['oliver','Thor','jeff','gary','jessy','omega','lindsey','mary','c001','c002','c003','Jacob','Michael','Ethan','Joshua','Alexander','Anthony','William','Christopher','Jayden','Andrew','Joseph','David','Noad','Aiden','James','Ryan','Logan','John','Nathan','Elijah','Christian','Gabriel','Benjamin','Jonathan','Tyler','Samuel','Nicholas','Gavin','Dylan']
 # user_tokens=['oOZg40kK2BLQAXxGY29kpxXetc0c','oliver','Thor','jeff','gary']
@@ -63,7 +63,7 @@ def send_orders():
     for user_token in user_tokens:
         data = {'UserToken': user_token, 'OrderAmount': random.choice(fees) ,
                 'OrderNo': str(random.randint(1,1000000000)).rjust(16, '0')}
-        time.sleep(random.randint(0, 30))
+        # time.sleep(random.randint(0, 30))
         r = requests.post(url, data=data).text
         print(r)
 
