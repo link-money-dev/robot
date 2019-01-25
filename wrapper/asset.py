@@ -12,7 +12,8 @@ class Asset(object):
             raise XdrLengthError("Asset code must be 12 characters at max.")
 
         if str(code).lower() != 'native' and issuer is None:
-            raise Exception("Issuer cannot be null")
+            pass
+            # raise Exception("Issuer cannot be null")
 
         self.code = code
         self.issuer = issuer

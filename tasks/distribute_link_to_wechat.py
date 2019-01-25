@@ -50,6 +50,7 @@ def get_users_and_total_expenses(t, interval=3600):
     datetime_upperbound = t
     datetime_lowerbound = datetime_upperbound-interval
     sql='select * from orders where created_at<' + str(datetime_upperbound) + ' and is_filled=0'
+    sql = 'select * from orders where created_at between ' + str(datetime_upperbound-interval) + ' and ' + str(datetime_upperbound) +  ' and is_filled=0 and orderno like \'000000%\''
     rows=my_pgmanager.select(sql)
     # get all distinct user_tokens:
     user_tokens=[]
@@ -70,11 +71,11 @@ def get_users_and_total_expenses(t, interval=3600):
                 sql = 'insert into private_keys(user_token,private_key,public_key, is_activated) values(\'%s\',\'%s\',\'%s\',0)' % (
                     token, keypair[0], keypair[1])
                 my_pgmanager.execute(sql)
-                user = USER.User(token, expense, keypair[1], keypair[0], 0)
+                user = USER.User(token, expense, keypair[1], keypair[0], 0,row[7])
             else:
                 keypair = (rs[0][2], rs[0][3])
                 is_activated = rs[0][6]
-                user = USER.User(token, expense, keypair[1], keypair[0], 1)
+                user = USER.User(token, expense, keypair[1], keypair[0], 1,row[7])
             users[token] = user
         else:
             users[token].add_expense(expense)
@@ -192,6 +193,13 @@ def activate_accounts(instance='test'):
     pass
 
 def main():
+    # get the call back url:
+    sql='select * from sources'
+    rows=my_pgmanager.select(sql)
+    call_back_urls={}
+    for row in rows:
+        call_back_urls[row[0]]=(row[1],row[3])
+
     # cnt=0
     global cnt
     cnt+=1
@@ -200,12 +208,14 @@ def main():
     timeArray = time.localtime(t)
     otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
     print('Epoch:   %s\tTime:   %s' % (str(cnt),otherStyleTime))
+
+
     users = {}
     expenses = {}
     total_expenses = 0
 
     # 0. get all distinct users group by token, and total expenses
-    users,total_expenses=get_users_and_total_expenses(t, 3600*3)
+    users,total_expenses=get_users_and_total_expenses(t,3600)
     print('0. users and total expenses calculated successfully')
 
     # 1. calculate the link to be distributed to the single person
@@ -281,70 +291,84 @@ def main():
         for thread in threads:
             thread.join()
         print('trusting successfully')
-        # my_pgmanager.execute_many('update private_keys set has_trusted=1 where public_key=%(public_key)s', sqls)
+         # my_pgmanager.execute_many('update private_keys set has_trusted=1 where public_key=%(public_key)s', sqls)
     else:
         pass
 
     # distribute link
-    builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
-    if len(users)!=0:
-        iterations = int(len(users) / 100)
-        # for i in range(0,iterations):
-        #     for ii in range(0,100):
-        #         pass
-        list_users=list(users)
-        for i in range(0,iterations+1):
+    # first filter out all users where source_id={source_id|source_id in source_ids}
+    groups={}
+    for source_id in call_back_urls.keys():
+        groups[source_id]={}
+    for user_token in users.keys():
+        for source_id in call_back_urls.keys():
+            if users[user_token].source_id==source_id:
+                groups[source_id][user_token]=users[user_token]
+    for source_id in groups.keys():
+        users=groups[source_id]
 
-            list_users_to_be_sent = list_users[i * 100:i * 100 + 100]
-            builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
-            for k in list_users_to_be_sent:
-                user=users[k]
-                builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK',
-                                          asset_issuer=constant.ISSUER_ADDRESS)
-            builder.add_text_memo(str(time.time()))
-            builder.sign()
+        builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
+        if len(users)!=0:
+            iterations = int(len(users) / 100)
+            list_users=list(users)
+            for i in range(0,iterations+1):
 
-        # for k in users:
-        #     user = users[k]
-        #     builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK', asset_issuer=constant.ISSUER_ADDRESS)
-        # # add a memo, which specifies the timestamp when the latest order is submitted
-        # builder.add_text_memo(str(time.time()))
-        # builder.sign()
-            res=builder.submit()
-            # time.sleep(20)
-            if res.__contains__('hash'):
-                sqls=[]
-                items=[]
+                list_users_to_be_sent = list_users[i * 100:i * 100 + 100]
+                builder = BUILDER.Builder(secret=constant.DISTRIBUTOR_SEED, network=constant.API_SERVER)
                 for k in list_users_to_be_sent:
-                    user = users[k]
-                    sqls.append({'is_filled': 1, 'user_token': user.token})
-                    item = {
-                        "UserToken": user.token,
-                        "LinkAddress": user.address,
-                        "LinkAmount": user.link
-                    }
-                    items.append(item)
-                sql='update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s and created_at<' + str(t) + ' and is_filled=0'
-                my_pgmanager.execute_many(sql, sqls)
+                    user=users[k]
+                    builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK',
+                                              asset_issuer=constant.ISSUER_ADDRESS)
+                builder.add_text_memo(str(time.time()))
+                builder.sign()
 
-                try:
-                    # respond to server end
-                    # url='http://19o60w6992.51mypc.cn/sunday/link/callback'
-                    url='http://weixin.jrlyl.com/sunday/link/callback'
-                    # items=json.dumps(items)
-                    # data=json.dumps({'LinkResult1':items})
-                    data={'LinkResult':json.dumps(items)}
-                    res0=requests.post(url,data)
-                    print('link distribution successfully')
-                except Exception as e:
-                    print(e)
-    else:
-        pass
+            # for k in users:
+            #     user = users[k]
+            #     builder.append_payment_op(destination=user.address, amount=user.link, asset_type='LINK', asset_issuer=constant.ISSUER_ADDRESS)
+            # # add a memo, which specifies the timestamp when the latest order is submitted
+            # builder.add_text_memo(str(time.time()))
+            # builder.sign()
+
+                res=builder.submit()
+                # time.sleep(20)
+                if res.__contains__('hash'):
+                    sqls=[]
+                    items=[]
+                    for k in list_users_to_be_sent:
+                        user = users[k]
+                        sqls.append({'is_filled': 1, 'user_token': user.token})
+                        item = {
+                            "UserToken": user.token,
+                            "LinkAddress": user.address,
+                            "LinkAmount": user.link
+                        }
+                        items.append(item)
+                    sql='update orders set is_filled=%(is_filled)s where usertoken=%(user_token)s and created_at<' + str(t) + ' and is_filled=0'
+                    my_pgmanager.execute_many(sql, sqls)
+
+                    try:
+                        # respond to server end
+                        # url='http://19o60w6992.51mypc.cn/sunday/link/callback'
+                        url,param=call_back_urls[source_id]
+                        # items=json.dumps(items)
+                        # data=json.dumps({'LinkResult1':items})
+                        data={str(param):json.dumps(items)}
+                        res0=requests.post(url,data)
+                        print('link distribution successfully')
+                    except Exception as e:
+                        print(e)
+        else:
+            pass
     print('\n')
     print('\n')
     print('\n')
 
 if __name__=='__main__':
+    # if run immediately, un-comment the following line
+    # cnt=0
+    # main()
+
+    # if run schedully, un-comment the following lines
     from datetime import datetime
     dt=datetime.now().replace(minute=0, second=0, microsecond=0)
     unix_time=int(time.mktime(dt.timetuple()))

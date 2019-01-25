@@ -6,12 +6,11 @@ while True:
     k=KEYPAIR.Keypair.random()
     address=k.address()
     seed=k.seed()
-    if address[0:3]=='GFX':
+    a=address[-3:]
+    if address[0:4]=='GBTC':
 
         print(address)
         print(seed)
         print
-        cnt+=1
-        if cnt>5:
-            break
+
 

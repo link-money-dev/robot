@@ -30,7 +30,7 @@ DB_CONNECT_ARGS_LOCAL={'database':'lyl_orders', 'user':'cc5985', 'pw':'Caichong4
 # 5. HORIZON_CONNECT_ARGS
 DB_CONNECT_ARGS_HORIZON_TEST={'database':'horizon', 'user':'cc5985', 'pw':'Caichong416', 'host':'116.62.226.231', 'port':'5432'}
 DB_CONNECT_ARGS_HORIZON_PUBLIC={'database':'horizon', 'user':'cc5985', 'pw':'Caichong416', 'host':'47.75.115.19', 'port':'5432'}
-DB_CONNECT_ARGS_HORIZON_LOCAL={'database':'horizon', 'user':'cc5985', 'pw':'Caichong416', 'host':'116.62.226.231', 'port':'5432'}
+DB_CONNECT_ARGS_HORIZON_LOCAL={'database':'horizon', 'user':'cc5985', 'pw':'Caichong416', 'host':'localhost', 'port':'5432'}
 
 # 6. HORIZON_BASE_URL
 HORIZON_BASE_URL_TEST='http://116.62.226.231:8888'
@@ -50,8 +50,11 @@ class Constant():
             self.ISSUER_ADDRESS='GDJHGNGELXCNMIW6PRGP4E5VDG22TCVRCJ45U4X2VD6SYNJ57EJEZXY5'
             self.DISTRIBUTOR_SEED='SCV5M6ISCCVYBQ5Y4GQ3L2A6JM25Z4CAIZOBSWBRURFCBF4OKW3OAM3M'
             self.DISTRIBUTOR_ADDRESS='GCHZDZXYLZ76XADS7735LK3OJUFZ2TBSXAR23YXKXCXXHUEEVT5C37PY'
-            self.FOTONO_STARTING_BALANCE=50
+            self.FOTONO_STARTING_BALANCE=200
             self.BASE_URL=BASE_URL_LOCAL
+            self.DB_CONNECT_ARGS=DB_CONNECT_ARGS_LOCAL
+            self.HORIZON_DB_CONNECT_ARGS=DB_CONNECT_ARGS_HORIZON_LOCAL
+
         elif server=='public':
             self.ENCRYPTED_MASTER_SEED='7cf51b0a17b1b4f65bedf437654a65272a95eacf0dc93d994d8244b579a529a54d4c7608a96f30f22baf9f227feaec9c18895ce75f8c760018eda9affffcfabf'
             self.SEED = 'SDCCOAL6ILCJXWQPDZLRNHTMAHLZHC2IIHGPSQMLSIPHRTLNCFNT4A66'

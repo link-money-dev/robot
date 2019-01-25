@@ -16,16 +16,30 @@ rows=sql_manager.execute('select * from keys')
 seed='SDYYLWVFTUPF6QKVYEUWP7GR5X3SFY2MOPMEPPPCES5ZT2DYJIBY4P63'
 client=Client(private_key=constant.SEED, api_server=constant.API_SERVER)
 
-for i in range(9,10):
-    builder = BUILDER.Builder(seed, network=constant.API_SERVER)
-    current_rows=rows[i*100+99:]
-    for row in current_rows:
-        public_key=row[1]
-        builder.append_create_account_op(public_key,99999979.3)
-    builder.sign()
-    builder.submit()
+# for i in range(0,9):
+#     builder = BUILDER.Builder(seed, network=constant.API_SERVER)
+#     current_rows=rows[i*100:i*100+100]
+#     for row in current_rows:
+#         public_key=row[1]
+#         builder.append_create_account_op(public_key,100000000)
+#     builder.sign()
+#     builder.submit()
 
+# for i in range(9,10):
+#     builder = BUILDER.Builder(seed, network=constant.API_SERVER)
+#     current_rows = rows[i * 100:i*100 + 99]
+#     for row in current_rows:
+#         public_key = row[1]
+#         builder.append_create_account_op(public_key, 100000000)
+#     builder.sign()
+#     builder.submit()
 
+builder = BUILDER.Builder(seed, network=constant.API_SERVER)
+current_row=rows[-1:]
+public_key = current_row[0][1]
+builder.append_create_account_op(public_key, 99999999-20)
+builder.sign()
+builder.submit()
 # # 定义一个收币端，of Client
 # destination=Client(address=constant.ISSUER_ADDRESS)
 #

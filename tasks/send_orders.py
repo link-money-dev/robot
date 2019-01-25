@@ -8,8 +8,9 @@ import CONSTANT
 from wrapper import db as DB
 import schedule
 
-constant=CONSTANT.Constant('local')
+constant=CONSTANT.Constant('public')
 url=constant.BASE_URL + '/link/api/call/run/orders'
+url2=constant.BASE_URL + '/link/api/call/run/orders_q'
 user_tokens=['oliver','Thor','jeff','gary','jessy','omega','lindsey','mary','c001','c002','c003','Jacob','Michael','Ethan','Joshua','Alexander','Anthony','William','Christopher','Jayden','Andrew','Joseph','David','Noad','Aiden','James','Ryan','Logan','John','Nathan','Elijah','Christian','Gabriel','Benjamin','Jonathan','Tyler','Samuel','Nicholas','Gavin','Dylan']
 # user_tokens=['oOZg40kK2BLQAXxGY29kpxXetc0c','oliver','Thor','jeff','gary']
 # user_tokens=['bitch','slut','whore','motherfucker']
@@ -21,7 +22,7 @@ for i in range(10):
     for j in range(10):
         user_token+=random.choice('1 2 3 4 5 6 7 8 9 0 p o i u y t r e w q a s d f g h j k l m n b v c x z'.split(' '))
     user_tokens.append(user_token)
-fees=[100]
+fees=[1]
 order_no=15200
 def send_orders(span=300, interval=0.5):
     global user_tokens
@@ -50,11 +51,13 @@ def send_orders(span=300, interval=0.5):
             time.sleep(interval)
         time.sleep(300)
 
-def send_orders():
+def send_orders2():
     user_tokens = [
-        'oOZg40ob75KjAGmdV-rfUVXWsFiE',
-        'oOZg40gWP6JkUNCLDHc7SZr_cYFM',
-        'oOZg40qZIe-Ni3iWakTlnws0Otjk'
+        'oucE10XP5VPF5t86nWp-4L7jRCsQ',
+        'oucE10e6W6Qem_oGQ_Lkk4Bz-cuY',
+        'oOZg40qEEE5NPaNNnhC6jETtlBVc',
+        'oOZg40hX-huCNqKfuGGpihW5cfqw',
+        'oOZg40kK2BLQAXxGY29kpxXetc0c'
     ]
     import random
     import time
@@ -65,6 +68,10 @@ def send_orders():
                 'OrderNo': str(random.randint(1,1000000000)).rjust(16, '0')}
         # time.sleep(random.randint(0, 30))
         r = requests.post(url, data=data).text
+        print(r)
+        data = {'UserToken': user_token, 'OrderAmount': random.choice(fees),
+                'OrderNo': str(random.randint(1, 1000000000)).rjust(16, '0')}
+        r=requests.post(url2,data=data).text
         print(r)
 
 if __name__=='__main__':
@@ -77,5 +84,4 @@ if __name__=='__main__':
     # rows = my_pgmanager.select('select distinct usertoken from orders where usertoken like \'%oOZg40%\'')
     # for row in rows:
     #     user_tokens.append(row[0])
-    timer=TIMER.Timer(3600,send_orders)
-    timer.run()
+    send_orders2()

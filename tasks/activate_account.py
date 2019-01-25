@@ -1,22 +1,35 @@
 import CONSTANT
 from wrapper.client import Client
+from wrapper import builder as BUILDER
+from wrapper import db as DB
 
-accounts_to_be_activated=[
-'SDJPAJAY223ECKE5UMLFA66XW6L7S53TNYAPEB5SSHKG2LVL27MHJC7O',
-'SBFWXCCQ6ETYKNDPHSSOPXSQGC6X6NVQXU5AAJPRMJ2U4PZHFYS2TRDI',
-'SCPRQM72Z5FLLEPG2EMS2IXHS3NLC4BGUFS5PQZN2C5S2KSXT2GMVQCV'
-]
+# import public keys:
+f=open('accounts.dat','r')
+lines=f.readlines()
+accounts=[]
+for line in lines:
+    accounts.append(line[:56])
 
-accounts_to_be_activated=[
-'GAMEJK4T45MLQ5QJKOYHLW3EQNSOQVPDLVMNLJFG4Z53WJGUZI7FSWOI',
-'GAMEXYMNGLDLG6HBXAGSKIN5GYYE2J6CB3Q376HW5BMECY62POVSTCZQ',
-'GAMEORZL3JSAZVQQQALN3QBLSYWLLRGPTMV7BJDB2IMGPATWPX4QBUWM',
-'GAMEYMSJFIZAI5J6TVFTVCXG2M25I6FXNG7HJNRCYXCZ27K7EO7ADMRI',
-'GAMEBQD3ZA27LTKTSPLNPV3VVHMPF3QG6NE5S3NIQ5G37RI3O7UFELEU',
-'GAME7LKT5STOP5RO35NHA7APWGHECKDB4477HMPBWZW5OFZRSZOZ7YD6'
-
-]
 constant=CONSTANT.Constant('public')
 client=Client(private_key='SDQ43Z762OW6L7YBCRBNB2LL57YADNHARB2AW4RE45RSKM7PWRTT76PT',api_server=constant.API_SERVER)
+# client.fund('GAX5PIR4Q75XQKZLLARXFPBIZW5XBVZHG7ILBUC6ZE5SSBQZKIUWIVDU',amount=200)
+client.fund('GD4OYE7L66MWK7TKK4OYLSPRHIIHERXKOOYSCEOFJK26AQWBUMLI3VGM',amount=200)
 # ..UAA
-client.fund(destination='GBS4KOHWXJEN52BH4AHUMHHRNK23CJJLQBB7J3M6FK6QABCKLKBTYWPB',amount=1000)
+
+my_pgmanager=DB.PGManager(**constant.DB_CONNECT_ARGS)
+
+rows=my_pgmanager.select('select public_key from private_keys')
+for row in rows:
+    address=row[0]
+    if (address in accounts)==False:
+        print(address+ str(client.fund(address,200)))
+
+for i in range(32,len(accounts)/100+1):
+    accounts_to_be_activated=accounts[i*100:i*100+100]
+    builder = BUILDER.Builder(secret='SDQ43Z762OW6L7YBCRBNB2LL57YADNHARB2AW4RE45RSKM7PWRTT76PT',
+                              network=constant.API_SERVER)
+    for account in accounts_to_be_activated:
+        builder.append_create_account_op(destination=account,starting_balance=200)
+    builder.sign()
+    builder.submit()
+

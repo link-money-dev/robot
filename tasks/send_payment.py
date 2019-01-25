@@ -16,6 +16,11 @@ client=Client(private_key=constant.SEED, api_server=constant.API_SERVER)
 # 定义一个收币端，of Client
 destination=Client(address=constant.ISSUER_ADDRESS)
 
-# client.pay_to(destination='GCA3SBI2Y6AYHLAW2GBTS7C5HTSFW6OTZACHOVJGBQ6JENTE3ZXPNNSL', amount=1000000)
-client=Client(private_key='SCZVR6ZS3UKV3YHTK5YJJ3E7WD6RLWKJDPRTUNYQQ54BDFAYEQ4JDZ6S', api_server=constant.API_SERVER)
-client.pay_to(destination='GAMEXYMNGLDLG6HBXAGSKIN5GYYE2J6CB3Q376HW5BMECY62POVSTCZQ', amount=400)
+# send fotono
+client=Client(private_key=constant.SEED, api_server=constant.API_SERVER)
+client.pay_to(destination='GCPPN2D7COSSQVP3LL3TKUAZNWEP2AEKITO57TDF42DBQEKESDA7CNXZ', amount=200)
+
+# send link
+client=Client(private_key=constant.DISTRIBUTOR_SEED,api_server=constant.API_SERVER)
+result=client.pay_to(destination='GBBKSTPOVEUOXKTBMWYXLIAVIQSIUSJFQARFEGD4HGIMPDCEKS4FVZXP',amount=0.01,asset_code='LINK',asset_issuer=constant.ISSUER_ADDRESS)
+print(result)
