@@ -31,7 +31,8 @@ def total_link_to_be_distributed(reserve=0):
     if t<1537203600:
         return 5477
     else:
-        return -0.025 * int((t-1537203600)/3600) + 5477.2135
+        return 416
+        # return -0.025 * int((t-1537203600)/3600) + 5477.2135
 
 def allocate_key(user_tokens):
     for user_token in user_tokens:
@@ -50,7 +51,7 @@ def get_users_and_total_expenses(t, interval=3600):
     datetime_upperbound = t
     datetime_lowerbound = datetime_upperbound-interval
     sql='select * from orders where created_at<' + str(datetime_upperbound) + ' and is_filled=0'
-    sql = 'select * from orders where created_at between ' + str(datetime_upperbound-interval) + ' and ' + str(datetime_upperbound) +  ' and is_filled=0 and orderno like \'000000%\''
+    # sql = 'select * from orders where created_at between ' + str(datetime_upperbound-interval) + ' and ' + str(datetime_upperbound) +  ' and is_filled=0 and orderno like \'000000%\''
     rows=my_pgmanager.select(sql)
     # get all distinct user_tokens:
     user_tokens=[]
