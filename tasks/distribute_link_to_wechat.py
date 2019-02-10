@@ -107,7 +107,7 @@ def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0
         for k in users_:
             user=users_[k]
             link_to_be_distributed=float(user.expense)/mid/discount
-            user.link=link_to_be_distributed
+            user.link = round(link_to_be_distributed, 6)
     else:
         pass
     return users_
