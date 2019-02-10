@@ -3,7 +3,7 @@ from .utils import xdr_hash
 
 NETWORKS = {'PUBLIC': 'Fotono Main Net; 2018-8-10',
             'TESTNET': 'Fotono Test Network; 2017-1-1',
-            'LOCAL': 'Fotono Network Main Net; 2018-3-15',
+            'LOCAL': 'a standalone net',
             'STELLAR': 'Public Global Stellar Network ; September 2015'
             }
 

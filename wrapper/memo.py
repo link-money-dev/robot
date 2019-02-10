@@ -41,8 +41,8 @@ class TextMemo(Memo):
         else:  # python 3 or python 2 with unicode string
             self.text = bytearray(text, encoding='utf-8')
         length = len(self.text)
-        if length > 28:
-            raise XdrLengthError("Text should be <= 28 bytes (ascii encoded). Got {:s}".format(str(length)))
+        if length > 512:
+            raise XdrLengthError("Text should be <= 512 bytes (ascii encoded). Got {:s}".format(str(length)))
 
     def to_xdr_object(self):
         return Xdr.types.Memo(type=Xdr.const.MEMO_TEXT, text=self.text)

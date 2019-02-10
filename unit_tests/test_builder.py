@@ -24,7 +24,7 @@ class TestBuilder(unittest.TestCase):
         :return:
         '''
         constants=[
-            CONSTANT.Constant('testnet'),
+            CONSTANT.Constant('local'),
             CONSTANT.Constant('public'),
         ]
         builders=[]

@@ -716,7 +716,7 @@ class StellarXDRPacker(xdrlib.Packer):
         elif data.type == const.MEMO_TEXT:
             if data.text is None:
                 raise TypeError('data.text == None')
-            if len(data.text) > 28 and self.check_array:
+            if len(data.text) > 512 and self.check_array:
                 raise XDRError('array length too long for data.text')
             self.pack_string(data.text)
         elif data.type == const.MEMO_ID:

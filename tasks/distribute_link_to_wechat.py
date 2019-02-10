@@ -97,6 +97,31 @@ def calculate_link_to_be_distributed_to_single_person(users, total_expenses, log
         pass
     return users_
 
+def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0.8):
+    high=float(prices[3])
+    low=float(prices[4])
+    mid=(high+low)/2
+    import copy
+    users_=copy.deepcopy(users)
+    if len(users_)!=0:
+        for k in users_:
+            user=users_[k]
+            link_to_be_distributed=float(user.expense)/mid/discount
+            user.link=link_to_be_distributed
+    else:
+        pass
+    return users_
+
+def get_ceo_prices(default_prices):
+    try:
+        url='https://ceo.bi/api/market/kline?market=nlink_qc&type=1hour&size=1'
+        text=requests.get(url).text
+        j=json.loads(text)
+        prices=j['data']['data'][0]
+    except:
+        prices=default_prices
+    return prices
+
 def get_inactive_accounts(accounts, instance='test'):
     constant=CONSTANT.Constant(instance)
     horizon_pgmanager = DB.PGManager(**constant.HORIZON_DB_CONNECT_ARGS)
@@ -220,7 +245,13 @@ def main():
     print('0. users and total expenses calculated successfully')
 
     # 1. calculate the link to be distributed to the single person
-    users=calculate_link_to_be_distributed_to_single_person(users,total_expenses)
+    # following are original version
+    # users=calculate_link_to_be_distributed_to_single_person(users,total_expenses)
+    # print('1. link distribution calculation successfully')
+    # following are modified version
+    global default_prices
+    default_prices=get_ceo_prices(default_prices)
+    users = calculate_link_to_be_distributed_to_single_person2(users, default_prices)
     print('1. link distribution calculation successfully')
 
     # 2. activate accounts
@@ -365,22 +396,23 @@ def main():
     print('\n')
 
 if __name__=='__main__':
+    default_prices=[0,0,0,1,1,0,0]
     # if run immediately, un-comment the following line
-    # cnt=0
-    # main()
+    cnt=0
+    main()
 
     # if run schedully, un-comment the following lines
-    from datetime import datetime
-    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
-    unix_time=int(time.mktime(dt.timetuple()))
-    base_time=unix_time+3600
-    t = time.time()
-    while t<base_time:
-        t = time.time()
-        time.sleep(5)
-
-    print('robot launched!!!\n\n')
-    cnt=0
-    timer=TIMER.Timer(3600,main)
-    timer.run()
+    # from datetime import datetime
+    # dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    # unix_time=int(time.mktime(dt.timetuple()))
+    # base_time=unix_time+3600
+    # t = time.time()
+    # while t<base_time:
+    #     t = time.time()
+    #     time.sleep(5)
+    #
+    # print('robot launched!!!\n\n')
+    # cnt=0
+    # timer=TIMER.Timer(3600,main)
+    # timer.run()
 
