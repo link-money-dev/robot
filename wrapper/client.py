@@ -49,7 +49,6 @@ class Client:
         info=address.get()
         return info
 
-
     def get_balances(self, address=''):
         if address=='':
             address=Address(address=self.address,network=self.api_server)
@@ -82,5 +81,11 @@ class Client:
     def trust(self, issuer_address, asset_code, limit=None):
         builder = Builder(secret=self.private_key, network=self.api_server)
         builder.append_trust_op(destination=issuer_address, code=asset_code, limit=limit)
+        builder.sign()
+        builder.submit()
+
+    def manage_data(self, data_name, data_value=''):
+        builder=Builder(secret=self.private_key, network=self.api_server)
+        builder.append_manage_data_op(data_name=data_name, data_value=data_value)
         builder.sign()
         builder.submit()
