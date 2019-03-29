@@ -97,7 +97,7 @@ def calculate_link_to_be_distributed_to_single_person(users, total_expenses, log
         pass
     return users_
 
-def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0.8):
+def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0.67):
     high=float(prices[3])
     low=float(prices[4])
     mid=(high+low)/2

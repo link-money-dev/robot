@@ -116,22 +116,22 @@ distributor_address_for_OTHERS='GB552GC4YLN7O7Z6DDDFOO7ZPK6374H4YZGZ4YJMWQW6HBRR
 # result=issuer.issue_asset(distributor.private_key,asset_code='NEO',amount=100000000)
 # print(result)
 
-issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
-distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
-result=issuer.issue_asset(distributor.private_key,asset_code='ETC',amount=107000000)
-print(result)
-
-issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
-distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
-result=issuer.issue_asset(distributor.private_key,asset_code='XEM',amount=8999999999)
-print(result)
-
-issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
-distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
-result=issuer.issue_asset(distributor.private_key,asset_code='ZEC',amount=5000000)
-print(result)
-
-issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
-distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
-result=issuer.issue_asset(distributor.private_key,asset_code='MKR',amount=1000000)
-print(result)
+# issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# result=issuer.issue_asset(distributor.private_key,asset_code='ETC',amount=107000000)
+# print(result)
+#
+# issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# result=issuer.issue_asset(distributor.private_key,asset_code='XEM',amount=8999999999)
+# print(result)
+#
+# issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# result=issuer.issue_asset(distributor.private_key,asset_code='ZEC',amount=5000000)
+# print(result)
+#
+# issuer=CLIENT.Client(private_key=issuer_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# distributor=CLIENT.Client(private_key=distributor_private_key_for_OTHERS, api_server=constant.API_SERVER)
+# result=issuer.issue_asset(distributor.private_key,asset_code='MKR',amount=1000000)
+# print(result)

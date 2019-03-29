@@ -28,7 +28,7 @@ def sync_db():
     else:
         last_created_at_in_lyl = rows[0][0]
 
-    if last_created_at_in_lyl<last_created_at_in_horizon:
+    if 0==0: #last_created_at_in_lyl<last_created_at_in_horizon:
         sql1="select * from history_transactions where created_at>'" + str(last_created_at_in_lyl) + "' order by created_at asc"
         rows_in_horizon=horizon_pgmanager.select(sql1)
         for row in rows_in_horizon:
