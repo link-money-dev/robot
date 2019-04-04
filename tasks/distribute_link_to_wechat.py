@@ -114,8 +114,9 @@ def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0
 
 def get_ceo_prices(default_prices):
     try:
+        headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0'}
         url='https://ceo.bi/api/market/kline?market=nlink_qc&type=1hour&size=1'
-        text=requests.get(url).text
+        text=requests.get(url,headers=headers).text
         j=json.loads(text)
         prices=j['data']['data'][0]
     except:
