@@ -119,8 +119,9 @@ def get_ceo_prices(default_prices):
         text=requests.get(url,headers=headers).text
         j=json.loads(text)
         prices=j['data']['data'][0]
-    except:
+    except Exception as e:
         prices=default_prices
+        print('some error occurred in Function get_ceo_prices\n\n' + e.message.message)
     return prices
 
 def get_inactive_accounts(accounts, instance='test'):
@@ -251,9 +252,15 @@ def main():
     # print('1. link distribution calculation successfully')
     # following are modified version
     global default_prices
-    default_prices=get_ceo_prices(default_prices)
-    users = calculate_link_to_be_distributed_to_single_person2(users, default_prices)
-    print('1. link distribution calculation successfully')
+
+    try:
+        default_prices = get_ceo_prices(default_prices)
+        users = calculate_link_to_be_distributed_to_single_person2(users, default_prices)
+        print('1. link distribution calculation successfully')
+    except Exception as e:
+        print('Failed at Main:257 (get all distinct users group by token, and total expenses)' + e.message)
+
+
 
     # 2. activate accounts
     builder = BUILDER.Builder(secret=constant.SEED, network=constant.API_SERVER)

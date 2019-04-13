@@ -18,7 +18,7 @@ destination=Client(address=constant.ISSUER_ADDRESS)
 
 # send fotono
 client=Client(private_key=constant.SEED, api_server=constant.API_SERVER)
-client.pay_to(destination='GCNY2H4OAQNSVG2WUQ5EGABFLEG2GXF3OZZVJCQB7N2KCIGWVTY6WTHB', amount=2000)
+client.pay_to(destination='GDO33QAVIF62OP3UMQWLTZVDYXAVRL3W6LLPJ2AHZ33IAUEZKK4DCHFK', amount=100)
 
 # send link
 client=Client(private_key=constant.DISTRIBUTOR_SEED,api_server=constant.API_SERVER)
