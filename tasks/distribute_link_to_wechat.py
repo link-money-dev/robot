@@ -255,7 +255,7 @@ def main():
 
     try:
         default_prices = get_ceo_prices(default_prices)
-        users = calculate_link_to_be_distributed_to_single_person2(users, default_prices)
+        users = calculate_link_to_be_distributed_to_single_person2(users, default_prices,0.7519)
         print('1. link distribution calculation successfully')
     except Exception as e:
         print('Failed at Main:257 (get all distinct users group by token, and total expenses)' + e.message)
@@ -406,21 +406,21 @@ def main():
 if __name__=='__main__':
     default_prices=[0,0,0,1,1,0,0]
     # if run immediately, un-comment the following line
-    # cnt=0
-    # main()
+    cnt=0
+    main()
 
     # if run schedully, un-comment the following lines
-    from datetime import datetime
-    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
-    unix_time=int(time.mktime(dt.timetuple()))
-    base_time=unix_time+3600
-    t = time.time()
-    while t<base_time:
-        t = time.time()
-        time.sleep(5)
-
-    print('robot launched!!!\n\n')
-    cnt=0
-    timer=TIMER.Timer(3600,main)
-    timer.run()
+    # from datetime import datetime
+    # dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    # unix_time=int(time.mktime(dt.timetuple()))
+    # base_time=unix_time+3600
+    # t = time.time()
+    # while t<base_time:
+    #     t = time.time()
+    #     time.sleep(5)
+    #
+    # print('robot launched!!!\n\n')
+    # cnt=0
+    # timer=TIMER.Timer(3600,main)
+    # timer.run()
 

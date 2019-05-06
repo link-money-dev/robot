@@ -27,11 +27,11 @@ issuer_address_for_OTHERS='GBTCF6RETMMKZ6NKXIIAL5X3JZEZY2DPIIW77IZ6NWTNIUSAY37EQ
 distributor_private_key_for_OTHERS='SCZVR6ZS3UKV3YHTK5YJJ3E7WD6RLWKJDPRTUNYQQ54BDFAYEQ4JDZ6S'
 distributor_address_for_OTHERS='GB552GC4YLN7O7Z6DDDFOO7ZPK6374H4YZGZ4YJMWQW6HBRRAWNSIIQW'
 
-# # issue LINK
-# issuer=CLIENT.Client(private_key=issuer_private_key_for_LINK, api_server=constant.API_SERVER)
-# distributor=CLIENT.Client(private_key=distributor_private_key_for_LINK, api_server=constant.API_SERVER)
-# result=issuer.issue_asset(distributor.private_key,asset_code='LINK',amount=1000000000)
-# print(result)
+# issue LINK
+issuer=CLIENT.Client(private_key=issuer_private_key_for_LINK, api_server=constant.API_SERVER)
+distributor=CLIENT.Client(private_key=distributor_private_key_for_LINK, api_server=constant.API_SERVER)
+result=issuer.issue_asset(distributor.private_key,asset_code='LINK',amount=1000000000)
+print(result)
 #
 # # issue CNY
 # issuer=CLIENT.Client(private_key=issuer_private_key_for_CNY, api_server=constant.API_SERVER)

@@ -75,11 +75,15 @@ accounts={}
 rows=my_pgmanager.select('select * from liabilities where has_paid=0 ')
 
 # iterate over all rows and decide which is to pay link and cny, after paying, set has_paid to 1
+count=0
 for row in rows:
     # check if this account has trusted link and cny both
-    has_trusted_both_assets=check_trust(row[0])
+    count+=1
     total_asset_equivalant_to_cny=row[4]
-    if total_asset_equivalant_to_cny<10 or has_trusted_both_assets==False:
+    if total_asset_equivalant_to_cny<50 :
+        continue
+    has_trusted_both_assets = check_trust(row[0])
+    if has_trusted_both_assets == False:
         continue
     address=row[0]
     if has_trusted_both_assets==True:
