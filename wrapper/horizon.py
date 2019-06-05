@@ -15,7 +15,7 @@ except ImportError:
     # Python 2
     from urllib import urlencode
 
-HORIZON_LIVE = "http://47.75.115.19:8888"   # 主API服务器
+HORIZON_LIVE = "http://47.52.0.154:8888"   # 主API服务器
 HORIZON_TEST = "http://116.62.226.231:8888" # 测试API服务器
 HORIZON_LOCAL = "http://localhost:8888"
 HORIZON_STELLAR = "https://horizon.stellar.org/"

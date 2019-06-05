@@ -13,7 +13,7 @@ def get_all_payments(account_id, interval=3600):
     this_url = ''
     now=time.time()
     # account_id = 'GCNY2H4OAQNSVG2WUQ5EGABFLEG2GXF3OZZVJCQB7N2KCIGWVTY6WTHB'
-    base_url = 'http://47.75.115.19:8888/accounts/' + account_id + '/payments/'
+    base_url = 'http://47.52.0.154:8888/accounts/' + account_id + '/payments/'
     base_url = base_url + '?limit=10&order=desc'
 
     records = []

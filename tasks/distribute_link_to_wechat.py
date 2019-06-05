@@ -114,8 +114,10 @@ def calculate_link_to_be_distributed_to_single_person2(users, prices, discount=0
 
 def get_ceo_prices(default_prices):
     try:
+        s = requests.session()
+        s.keep_alive = False
         headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0'}
-        url='https://ceo.bi/api/market/kline?market=nlink_qc&type=1hour&size=1'
+        url='https://ceohk.bi/api/market/kline?market=nlink_qc&type=1hour&size=1'
         text=requests.get(url,headers=headers).text
         j=json.loads(text)
         prices=j['data']['data'][0]
@@ -406,21 +408,21 @@ def main():
 if __name__=='__main__':
     default_prices=[0,0,0,1,1,0,0]
     # if run immediately, un-comment the following line
-    # cnt=0
-    # main()
+    cnt=0
+    main()
 
     # if run schedully, un-comment the following lines
-    from datetime import datetime
-    dt=datetime.now().replace(minute=0, second=0, microsecond=0)
-    unix_time=int(time.mktime(dt.timetuple()))
-    base_time=unix_time+3600
-    t = time.time()
-    while t<base_time:
-        t = time.time()
-        time.sleep(5)
-
-    print('robot launched!!!\n\n')
-    cnt=0
-    timer=TIMER.Timer(3600,main)
-    timer.run()
+    # from datetime import datetime
+    # dt=datetime.now().replace(minute=0, second=0, microsecond=0)
+    # unix_time=int(time.mktime(dt.timetuple()))
+    # base_time=unix_time+3600
+    # t = time.time()
+    # while t<base_time:
+    #     t = time.time()
+    #     time.sleep(5)
+    #
+    # print('robot launched!!!\n\n')
+    # cnt=0
+    # timer=TIMER.Timer(3600,main)
+    # timer.run()
 

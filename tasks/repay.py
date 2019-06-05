@@ -44,7 +44,7 @@ def check_trust(address):
         return True
     else:
         return False
-    # res = requests.get('http://47.75.115.19:8888/accounts/' + address)
+    # res = requests.get('http://47.52.0.154:8888/accounts/' + address)
     # content=res.content
     # has_trusted_cny=False
     # has_trusted_link=False

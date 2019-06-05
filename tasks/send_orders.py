@@ -53,11 +53,7 @@ def send_orders(span=300, interval=0.5):
 
 def send_orders2():
     user_tokens = [
-        'oucE10XP5VPF5t86nWp-4L7jRCsQ',
-        'oucE10e6W6Qem_oGQ_Lkk4Bz-cuY',
-        'oOZg40qEEE5NPaNNnhC6jETtlBVc',
-        'oOZg40hX-huCNqKfuGGpihW5cfqw',
-        'oOZg40kK2BLQAXxGY29kpxXetc0c'
+        'oOZg40qZIe-Ni3iWakTlnws0Otjk'
     ]
     import random
     import time

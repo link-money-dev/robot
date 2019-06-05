@@ -8,7 +8,7 @@ import json
 
 result=[]
 def store_response(address):
-    content = requests.get('http://47.75.115.19:8888/accounts/' + address)
+    content = requests.get('http://47.52.0.154:8888/accounts/' + address)
     content=content.content
     try:
         content=json.loads(content)

@@ -348,7 +348,7 @@ class Builder(object):
             raise Exception('no address provided')
         try:
             address = self.horizon.account(self.address)
-        except:
+        except Exception as e:
             raise Exception('network problem')
 
         return address.get('sequence')
